@@ -1,0 +1,1 @@
+{"random_motes": false, "random_shades": false, "random_drifters": false, "motes": [], "shades": [], "player": {"pos": [0, 0, 0], "carried": 0, "flames": 3}, "lanterns": [{"id": "L1", "lit": true, "fuel": 80.0}, {"id": "L2", "lit": true, "fuel": 80.0}, {"id": "L3", "lit": false}, {"id": "L4", "lit": false}, {"id": "L5", "lit": false}], "time_left_s": 0.1}

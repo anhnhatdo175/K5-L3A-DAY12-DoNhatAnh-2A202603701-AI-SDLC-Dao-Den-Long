@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Game, EMPTY_INPUT } from './sim.js';
 
-const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned'];
+const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned', 'drain'];
 class BadInput extends Error {}
 const bad = (m) => { throw new BadInput(m); };
 
@@ -55,6 +55,8 @@ function validateScenario(s) {
     for (const k of ['invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks']) if (k in p && !(Number.isInteger(p[k]) && p[k] >= 0)) bad(`scenario.player.${k} phải là số nguyên >= 0`);
     if ('carried' in p && !(Number.isInteger(p.carried) && p.carried >= 0)) bad('scenario.player.carried phải là số nguyên >= 0');
     if ('flames' in p && !(Number.isInteger(p.flames) && p.flames >= 0)) bad('scenario.player.flames phải là số nguyên >= 0');
+    if ('successful_lights' in p && !(Number.isInteger(p.successful_lights) && p.successful_lights >= 0)) bad('scenario.player.successful_lights phải là số nguyên >= 0');
+    if ('capacity' in p && !(Number.isInteger(p.capacity) && p.capacity >= 0)) bad('scenario.player.capacity phải là số nguyên >= 0');
   }
   for (const k of ['random_motes', 'random_shades', 'random_drifters', 'wind_enabled']) if (k in s && typeof s[k] !== 'boolean') bad(`scenario.${k} phải là boolean`);
   if ('time_left_s' in s && !(isNum(s.time_left_s) && s.time_left_s >= 0)) bad('scenario.time_left_s phải là số >= 0');
@@ -68,6 +70,8 @@ function validateScenario(s) {
       if ('id' in q && typeof q.id !== 'string') bad('scenario.shades[].id phải là chuỗi');
       if ('state' in q && !SHADE_STATES.includes(q.state)) bad('scenario.shades[].state không hợp lệ');
       if ('state_ticks_left' in q && !(Number.isInteger(q.state_ticks_left) && q.state_ticks_left >= 0)) bad('scenario.shades[].state_ticks_left phải là số nguyên >= 0');
+      if ('state_ticks' in q && !(Number.isInteger(q.state_ticks) && q.state_ticks >= 0)) bad('scenario.shades[].state_ticks phải là số nguyên >= 0');
+      if ('target_lantern_id' in q && typeof q.target_lantern_id !== 'string') bad('scenario.shades[].target_lantern_id phải là chuỗi');
     }
   }
   if ('drifters' in s) {
@@ -96,6 +100,9 @@ function validateScenario(s) {
       if ('pos' in l && !isVec(l.pos, 3)) bad('scenario.lanterns[].pos phải là [x,y,z]');
       if ('deposited' in l && !(Number.isInteger(l.deposited) && l.deposited >= 0)) bad('scenario.lanterns[].deposited phải là số nguyên >= 0');
       if ('lit' in l && typeof l.lit !== 'boolean') bad('scenario.lanterns[].lit phải là boolean');
+      if ('fuel' in l && !(isNum(l.fuel) && l.fuel >= 0)) bad('scenario.lanterns[].fuel phải là số >= 0');
+      if ('ever_lit' in l && typeof l.ever_lit !== 'boolean') bad('scenario.lanterns[].ever_lit phải là boolean');
+      if ('relit_count' in l && !(Number.isInteger(l.relit_count) && l.relit_count >= 0)) bad('scenario.lanterns[].relit_count phải là số nguyên >= 0');
     }
   }
   return s;

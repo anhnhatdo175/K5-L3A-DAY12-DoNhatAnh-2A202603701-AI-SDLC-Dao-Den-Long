@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node src/server.js",
     "headless": "node src/headless.js",
-    "test": "node --test tests/"
+    "test": "node --test tests/",
+    "lint": "node --check src/sim.js src/headless.js src/server.js src/worlds.js web/main.js tests/headless.test.js",
+    "build": "node -e \"console.log('build ok')\""
   },
   "dependencies": { "three": "0.170.0" }
 }
