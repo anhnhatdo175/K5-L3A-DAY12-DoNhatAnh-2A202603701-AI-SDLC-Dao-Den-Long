@@ -69,8 +69,9 @@ export class Game {
    * @param {number} [o.night]  1..3
    * @param {object} [o.scenario] đã được validate
    */
-  constructor({ tuning, seed = 1, night = 1, scenario = {} }) {
+  constructor({ tuning, seed = 1, night = 1, scenario = {}, bench = false }) {
     this.t = tuning;
+    this.bench = !!bench; // Phase 4: cảnh benchmark — tắt hao dầu, nhặt, sát thương, phát hiện Mây, kết thúc Đêm
     this.sc = tuning.score;
     this.night = night;
     this.w = WORLDS[night];
@@ -400,7 +401,7 @@ export class Game {
     }
     if (s.state === 'recoil') { this._moveShade(s, (s.rx * RECOIL_M) / RECOIL_TICKS, (s.rz * RECOIL_M) / RECOIL_TICKS); return; }
 
-    const tracking = p.fallWait === 0;
+    const tracking = p.fallWait === 0 && !this.bench;
     const dPlayer = Math.hypot(p.x - s.x, p.z - s.z);
 
     if (s.state === 'drain') {
@@ -574,7 +575,7 @@ export class Game {
     }
 
     // Trừ dầu: hao hụt tự nhiên (1/60 mỗi tick) + bị hút (5/60 mỗi tick mỗi con)
-    for (const l of this.lanterns) {
+    for (const l of this.bench ? [] : this.lanterns) {
       if (!l.lit) continue;
       let drainUnits = 1; // tự hao 1.0/s = 1 unit (1/60) mỗi tick
       const drainingShades = this.shades.filter((s) => s.state === 'drain' && Math.hypot(s.x - l.x, s.z - l.z) <= 2.0 + 1e-9).sort(byId);
@@ -618,7 +619,7 @@ export class Game {
 
     const acting = p.fallWait === 0;
     // 4. nhặt đom đóm / bùa
-    if (acting) {
+    if (acting && !this.bench) {
       for (let i = 0; i < this.motes.length && p.carried < p.capacity; ) {
         const m = this.motes[i];
         if (Math.hypot(m.x - p.x, m.z - p.z) <= t.pickup_radius && Math.abs(p.y - m.y) <= REACH_Y) {
@@ -737,7 +738,7 @@ export class Game {
     for (const d of this.drifters) this._stepDrifter(d);
 
     // 9. chạm: Gió Lạc cướp trước, rồi Bóng Mực gây hit
-    if (acting) {
+    if (acting && !this.bench) {
       for (const d of [...this.drifters].sort(byId)) {
         if (d.state !== 'chase' || d.used) continue;
         if (Math.hypot(d.x - p.x, d.z - p.z) <= DRIFTER_TOUCH) {
@@ -793,6 +794,7 @@ export class Game {
     }
 
     // 11. thắng / thua
+    if (this.bench) return this.events;
     if (p.flames <= 0) {
       this._end('lost', 'no_flames');
     } else if (this.ticksLeft0 - this.steps <= 0) {

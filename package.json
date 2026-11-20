@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Đảo Đèn Lồng - game 3D (Phase 1)",
+  "description": "Đảo Đèn Lồng - game 3D (v1.0.0)",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
   "scripts": {
     "start": "node src/server.js",
     "headless": "node src/headless.js",
+    "bench": "node src/bench.js --seed 42 --duration 30 --out bench.json",
+    "soak": "node src/soak.js --seed 7 --nights 10 --out soak.json",
+    "package": "node scripts/package.mjs",
     "test": "node --test tests/",
-    "lint": "node --check src/sim.js src/headless.js src/server.js src/worlds.js web/main.js tests/headless.test.js",
+    "lint": "node scripts/lint.mjs",
     "build": "node -e \"console.log('build ok')\""
   },
   "dependencies": { "three": "0.170.0" }

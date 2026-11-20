@@ -30,8 +30,8 @@ const dist2 = (a, b) => Math.hypot(a[0] - b[0], a[2] - b[2]);
 
 // =========================== Contract / hồi quy Phase 1-2 ===========================
 
-test('contract v1.2 khớp số chuẩn', () => {
-  assert.equal(contract.contract_version, '1.2');
+test('contract v1.3 khớp số chuẩn (Phase 4 chỉ nâng version + bench_cmd/soak_cmd, số chuẩn giữ nguyên)', () => {
+  assert.equal(contract.contract_version, '1.3');
   const want = {
     player_speed: 6, carry_capacity: 10, capacity_max: 20, lantern_cost: 10, relight_cost: 5,
     pickup_radius: 1, interact_radius: 2, pulse_cost: 3, pulse_radius: 5,

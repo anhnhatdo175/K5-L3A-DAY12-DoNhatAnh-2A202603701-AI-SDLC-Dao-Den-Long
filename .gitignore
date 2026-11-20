@@ -2,3 +2,10 @@ node_modules/
 .env
 *.log
 nul
+data/
+dist/
+.scratch/
+.ui_*.png
+bench_t.*
+soak_t.json
+dts_t.json

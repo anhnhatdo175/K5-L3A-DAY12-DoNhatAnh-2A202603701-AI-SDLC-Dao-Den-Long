@@ -1,9 +1,11 @@
 {
-  "contract_version": "1.2",
+  "contract_version": "1.3",
   "team": "2A202603701-DoNhatAnh",
   "build_cmd": "npm install",
   "run_cmd": "npm start",
   "headless_cmd": "node src/headless.js",
+  "bench_cmd": "node src/bench.js",
+  "soak_cmd": "node src/soak.js",
   "tuning": {
     "player_speed": 6,
     "carry_capacity": 10,

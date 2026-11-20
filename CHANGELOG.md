@@ -2,6 +2,26 @@
 
 Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây. Quy ước tuân theo [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Phase 4 / v1.0.0] — 2026-11-20 (Ticket-04 "Bình minh: phát hành v1.0.0", Contract v1.3)
+
+### Added
+- **Benchmark** `node src/bench.js --seed 42 --duration 30 --out bench.json`: mở Chrome/Edge 1280×720 không toàn màn hình, tắt vsync, cảnh chuẩn (Đêm 1, 200 Bóng Mực wander, 100 đom đóm, L1–L3 sáng fuel 100, camera bay vòng R=30 m / Y=15 m / 15 s), 3 s khởi động rồi đo; xuất `bench.json` đúng định nghĩa Ticket-04 (`src/benchstats.js`).
+- **Soak test** `node src/soak.js --seed 7 --nights 10 --out soak.json`: 10 Đêm liên tiếp trong một tiến trình, input ngẫu nhiên theo seed, đo RSS đầu/cuối.
+- **Bảng xếp hạng cục bộ**: nhập tên (3–12 ký tự, cho phép chữ có dấu) sau Bình Minh hoặc sau khi thua; top 10; lưu `data/leaderboard.json`; màn hình Bảng xếp hạng từ menu; `npm start -- --export-leaderboard out.json`.
+- **Trợ năng**: đổi phím mọi hành động (phát hiện trùng, khôi phục mặc định, lưu); phụ đề + mũi tên mép màn hình (Bóng Mực xuất hiện, gió sắp thổi, 10 s cuối, đèn fuel < 30); "Giảm chuyển động" (tắt rung camera, chớp màn hình, nhấp nháy); cỡ chữ ≥ 18 px, tùy chọn chữ lớn ×1.25.
+- **Đóng gói**: `npm run package` → zip chạy ngay không cần `npm install`; `Dockerfile`; `LICENSE` (MIT), `CREDITS.md`, tài liệu `SPEC-PHASE4.md`, retro `docs/RETRO.md`, CI `.github/workflows/ci.yml`.
+- 30 test mới (`tests/phase4.test.js`), gồm 6 băm "vàng" chứng minh đầu ra headless giống hệt Phase 3.
+
+### Changed
+- `game.contract.json`: `contract_version` **1.3**, thêm `bench_cmd`, `soak_cmd`. Mọi số chuẩn v1.0–v1.2 giữ nguyên. Test cũ `contract v1.2 …` đổi thành v1.3 (chỉ vì nâng version).
+- `Game` nhận tùy chọn `bench` (chỉ dùng bởi cảnh benchmark; mặc định tắt nên đầu ra headless không đổi): tắt hao dầu, nhặt, sát thương, phát hiện Mây và điều kiện kết thúc Đêm.
+- `src/server.js` tách thành `createServer()` + API `/api/leaderboard`; `engines.node` ≥ 22 (WebSocket có sẵn dùng cho bench).
+- Client: giảm rác mỗi khung (tái dùng `Color`/`Vector3`) — p1_low_fps cải thiện rõ.
+- Seed Đêm trong client: `seed_run + đêm` (để lưu `seed` vào bảng xếp hạng).
+
+### Known limitations
+- Chưa đo trên máy chấm của giảng viên; số trong `bench.json` là của máy tác giả (Intel UHD, Windows 11). Video demo do tác giả quay/đính kèm Release.
+
 ## [Phase 3] — 2026-11-20 (Ticket-03 "Đèn cạn dầu", Contract v1.2)
 
 ### Breaking Changes (Thay đổi phá vỡ tương thích)
@@ -60,3 +80,16 @@ Mọi thay đổi đáng chú ý của dự án được ghi lại tại đây. 
    - Mắt và viền Bóng Mực: `#00B3FF` (thay vì `#7A3CFF`).
    - Cảnh báo UI: `#FFFFFF` kèm biểu tượng ⚠ (thay vì `#FF5A5F`).
    - Nhận diện không cần màu: đèn tắt xẹp 20% và có vết rách giấy; đèn có `fuel < 30` nhấp nháy 1 Hz; thanh dầu nổi trên đèn sáng.
+
+## [Phase 2] — 2026-11-20 (Ticket-02, Contract v1.1)
+
+- 3 Đêm (Đảo Bến, Đảo Cau, Đảo Chuông) với bản đồ chuẩn, số liệu chuẩn Ticket-02.
+- Lướt (dash), Bùa Gió, Gió Lạc (cướp đom đóm), bục nhảy, tầng/dốc, gió, tạm dừng, rơi khỏi đảo.
+- Client đầy đủ: HUD, mũi tên chỉ đèn, menu/cài đặt/tạm dừng, âm thanh WebAudio.
+- Test hồi quy được sửa số kỳ vọng theo Ticket-02 (lý do trong `SPEC-PHASE2.md` §1–2); tất định kiểm bằng `cmp` 2 lần (`docs/evidence/determinism.txt`).
+
+## [Phase 1] — 2026-11-20 (PRD-0, Contract v1.0)
+
+- Mô phỏng tất định 60 tick/s (`src/sim.js`, mulberry32 theo seed), chế độ headless theo Test Contract v1.0 (`src/headless.js`).
+- Nhặt đom đóm, nạp đèn, Bóng Mực (wander/chase/recoil/stunned), Tỏa Sáng, Ngọn Lửa, vùng an toàn.
+- Client 3D Three.js tối thiểu, test headless + scenario, `SPEC.md`, `AGENTS.md`, skill `headless-verify`.
