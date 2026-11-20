@@ -12,7 +12,7 @@
     "bench": "node src/bench.js --seed 42 --duration 30 --out bench.json",
     "soak": "node src/soak.js --seed 7 --nights 10 --out soak.json",
     "package": "node scripts/package.mjs",
-    "test": "node --test tests/",
+    "test": "node --test \"tests/*.test.js\"",
     "lint": "node scripts/lint.mjs",
     "build": "node -e \"console.log('build ok')\""
   },
