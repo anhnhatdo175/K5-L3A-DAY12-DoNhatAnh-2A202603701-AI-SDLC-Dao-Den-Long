@@ -9,6 +9,7 @@ const routes = {
   '/': 'web/index.html',
   '/main.js': 'web/main.js',
   '/sim.js': 'src/sim.js',
+  '/worlds.js': 'src/worlds.js',
   '/game.contract.json': 'game.contract.json',
   '/three.module.js': 'node_modules/three/build/three.module.js',
 };

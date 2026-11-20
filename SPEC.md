@@ -1,5 +1,7 @@
 # SPEC — Đảo Đèn Lồng · Phase 1 (Đêm 1 – Đảo Bến)
 
+> **⚠ Đã được thay thế một phần bởi [SPEC-PHASE2.md](SPEC-PHASE2.md)** (Ticket-02): số liệu chuẩn mới (bán kính nhặt/đèn/vùng an toàn, điểm…), bản đồ, Contract v1.1. Tài liệu này giữ nguyên làm lịch sử Phase 1; bằng chứng Phase 1 xem ở tag `phase-1`.
+
 > Nguồn yêu cầu: PRD-0 + Test Contract v1.0 (lab board). Tài liệu này biến chúng thành **đặc tả kiểm chứng được**: mỗi điều khoản có ID (`R-…`), mỗi ID có tiêu chí nghiệm thu và bằng chứng (test / ảnh / số đo) ở mục 11.
 > Từ khóa: **PHẢI** = bắt buộc theo PRD/Contract; **QUYẾT ĐỊNH** = chỗ PRD mơ hồ, tôi tự chọn và ghi lại (mục 10); **CLIENT-ONLY** = chỉ hiển thị, không ảnh hưởng headless.
 > Nguồn chân lý của con số: `game.contract.json` → `tuning`. Spec trích dẫn giá trị hiện tại, nếu lệch thì file JSON thắng.

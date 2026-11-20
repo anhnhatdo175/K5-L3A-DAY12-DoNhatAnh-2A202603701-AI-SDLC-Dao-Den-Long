@@ -104,21 +104,20 @@ Không commit API key, token hay `.env`. Gửi link repo theo hướng dẫn c�
 
 ---
 
-# Bài làm — Đảo Đèn Lồng (Phase 1 / PRD-0)
+# Bài làm — Đảo Đèn Lồng (Phase 1 + 2 · Contract v1.1)
 
 ## Cài đặt & chạy (≤ 3 lệnh, macOS/Linux/Windows, cần Node ≥ 20)
 
 ```
 npm install        # build_cmd — cài three.js
 npm start          # run_cmd — mở http://localhost:8080 (WebGL, trình duyệt)
-npm test           # 11 test headless + scenario
+npm test           # 38 test headless + scenario
 ```
 
-Headless (theo Test Contract v1.0):
+Headless (Test Contract v1.1):
 
 ```
-node src/headless.js --seed 1 --night 1 --ticks 600 --out out.jsonl \
-  [--scenario scenarios/pulse.json] [--inputs scenarios/pulse.inputs.json] [--snapshot-every 10]
+node src/headless.js --seed 1 --night 2 --ticks 600 --out out.jsonl   [--scenario scenarios/charm.json] [--inputs scenarios/charm.inputs.json] [--snapshot-every 10]
 ```
 
 ## Điều khiển
@@ -128,47 +127,41 @@ node src/headless.js --seed 1 --night 1 --ticks 600 --out out.jsonl \
 | W A S D | đi (theo hướng camera) |
 | Kéo chuột / ← → | xoay camera |
 | Space | nhảy |
-| E | nạp đom đóm vào đèn gần nhất (≤ `interact_radius`) |
-| F | tỏa sáng: choáng + đẩy lùi Bóng Mực (tốn 2 đom đóm, hồi 1 s) |
-| Enter | bắt đầu / chơi lại |
+| Shift | lướt 14 m/s × 0.2 s (hồi 1.5 s) |
+| E | nạp đom đóm vào đèn chưa sáng gần nhất (≤ 2 m) |
+| F | Tỏa Sáng: tốn 3 đom đóm, choáng + đẩy lùi Bóng Mực, hồi 3 s |
+| Esc / P | tạm dừng (menu: Tiếp tục / Chơi lại Đêm / Cài đặt / Về menu) |
+| Enter | bắt đầu / qua màn / chơi lại |
 
-## Luật & điểm
+## Luật & điểm (số chuẩn Ticket-02)
 
-- Chạm đom đóm (≤ 1.5 m) tự nhặt, mang tối đa 10. Mỗi đèn cần **8** đom đóm; nạp đủ là đèn sáng. Sáng cả **5** đèn → **thắng** (`all_lit`).
-- Bóng Mực đuổi (3.5 m/s, chậm hơn Mây 6 m/s), chạm → mất 1 ngọn lửa (có 3), rơi 50% đom đóm đang mang, bất tử 1.5 s. Hết lửa → **thua** (`no_flames`). Hết 300 s → **thua** (`dawn`).
-- Bóng Mực không vào được bán kính 5 m quanh **mọi** đèn (nơi trú an toàn). Tỏa sáng choáng 3 s, đẩy 3 m.
-- Rơi khỏi đảo (bán kính 40 m): mất 1 lửa như bị chạm, hồi sinh tại (0,0,0).
-- **Điểm**: +10 mỗi đom đóm, +100 mỗi đèn, +20 mỗi Bóng Mực bị choáng; khi **thắng** thêm +1 × số giây còn lại (làm tròn xuống) và +50 × số lửa còn lại.
+- 3 Đêm: **Đảo Bến** (5 đèn, 300 s) → **Đảo Cau** (2 đảo + cầu tre + bục nhảy, 6 đèn, 330 s) → **Đảo Chuông** (3 tầng, dốc, bục, gió mạnh, 7 đèn, 360 s). Mỗi đèn cần 10 đom đóm, nạp nhiều lần được. Sáng hết đèn → thắng. Hết 3 Ngọn Lửa (hồi đầy mỗi Đêm) hoặc hết giờ → thua.
+- **Bóng Mực** (4 m/s; Đêm 3: 4.5) thấy Mây trong 12 m, bỏ đuổi ngoài 18 m; chạm → −1 lửa, rơi một nửa đom đóm đang mang, bất tử 1.5 s. Không vào được vùng 6 m quanh đèn đã sáng.
+- **Gió Lạc** (Đêm 2–3): lụa xám xanh 7 m/s, cướp 3 đom đóm khi Mây mang ≥ 5. Tỏa Sáng trúng nó đang bay đi mang đồ → nó làm rơi lại.
+- **Bùa Gió**: 10 s chạy 7.2 m/s và lướt không hồi chiêu.
+- Rơi khỏi đảo: −1 lửa, mất hết đom đóm, hồi sinh sau 1 s.
+- **Điểm:** +10 mỗi đom đóm *nạp*, +100 mỗi đèn, +5 mỗi Bóng trúng Tỏa Sáng; khi thắng thêm ⌊giây còn lại⌋ × 2 + 50 × lửa còn lại. Tổng game = tổng điểm các Đêm đã thắng.
 
-## Giả định (PRD-0 mơ hồ → tự chọn, đều nằm trong `game.contract.json`)
+## Tài liệu kỹ thuật
 
-1. `safe_radius` áp dụng cho mọi đèn (cả chưa sáng) để chỗ nạp đèn luôn có thể thở.
-2. Đom đóm rơi = `floor(carried × hit_drop_ratio)`, vãi quanh chỗ bị chạm; nhặt lại được (và tính lại điểm).
-3. Khoảng cách chạm/nhặt tính theo mặt phẳng XZ (nhảy không né được Bóng Mực), đúng contract.
-4. `pulse` chỉ có hiệu lực khi đủ `pulse_cost` và hết cooldown; khi đó luôn ghi event `pulse` (kể cả `stunned_ids` rỗng).
-5. Bóng Mực xuất hiện đầu tiên ở giây 5, sau đó mỗi 12 s, tối đa 5 con, ở mép đảo. Đom đóm hồi lại 1 con/4 s (tối đa 24 đang hiện diện).
-6. Đèn bố trí vòng tròn bán kính 25 m, L1 ở (0,0,25), cách đều 72°.
-7. Không có `dash`; không có khái niệm nào để `null` — mọi trường tuning đều dùng.
-8. Snapshot có thêm mảng `motes` (khuyến nghị v1.0). Snapshot chỉ ở các tick chia hết `--snapshot-every`; dòng `end` luôn ở cuối.
+- [SPEC.md](SPEC.md) (Phase 1) và [SPEC-PHASE2.md](SPEC-PHASE2.md) (Phase 2): yêu cầu, acceptance criteria, **bảng giả định B1–B18**, truy vết tới test, và danh sách khoảng trống.
+- [AGENTS.md](AGENTS.md) + `.claude/skills/headless-verify/` — harness AI.
 
 ## Sáng tạo của tôi
 
-Hiệu ứng nhỏ chỉ ở client web (không có trong headless, không đổi output contract): đảo và bầu trời **đổi màu từ tím đen sang vàng cam** theo số đèn đã thắp, vòng sáng an toàn quanh đèn, nhấp nháy bất tử khi bị chạm, vòng sóng khi tỏa sáng. Bằng chứng lõi vẫn đúng: `npm test` (11/11) chạy trên `src/sim.js` dùng chung với client, xem `docs/evidence/`.
+Chỉ ở client web (không đổi headless): đảo/bầu trời đổi màu từ tím đen sang vàng cam theo số đèn đã thắp, vòng sáng an toàn quanh đèn, nhấp nháy bất tử, vòng sóng Tỏa Sáng, lá bay báo gió, nhạc nền tổng hợp WebAudio, đom đóm rơi nhấp nháy khi sắp hết hạn, "Ông Đăng" dẫn truyện trước mỗi Đêm.
 
 ## Bằng chứng (`docs/evidence/`)
 
 | Yêu cầu | Cách kiểm chứng | Kết quả |
 |---|---|---|
-| Format snapshot/event/end, đếm tick, `time_left_s` | `tests/headless.test.js` #1 | đạt |
-| Tất định cùng seed (đêm đầy đủ 18000 tick) | `cmp` hai lần chạy seed 42 → `determinism.txt`; test #2 | đạt |
-| Nhặt, nạp đèn, thắng, tỏa sáng, bị chạm, safe_radius, rơi, thua (2 lý do) | test #3–#9, scenario trong `scenarios/` | đạt |
-| Scenario không phát event/điểm | test #10 | đạt |
-| File sai → exit 2 | test #11 | đạt |
-| Game chạy có giao diện | `screenshot-night1.png` (Chrome headless, SwiftShader) | đạt (chỉ chụp khởi đầu; chưa quay video chơi hết ván) |
-| Hiệu năng headless | 18000 tick ≈ 0.1 s | đạt |
-
-**Chưa đạt/chưa kiểm chứng:** chưa chơi thủ công một ván thắng trên trình duyệt thật; chưa có video demo; chưa đặt tag `phase-1`.
+| Hồi quy Phase 1 với số chuẩn (nhặt, nạp, thắng, tỏa sáng, chạm, an toàn, rơi, thua) | `tests/headless.test.js` | **đạt** (đã đổi số kỳ vọng theo Ticket-02; lý do trong SPEC-PHASE2 §1–2) |
+| Mỗi tính năng mới có ≥ 1 scenario: lướt, bùa, Gió Lạc ×3, bục ×2, tầng/dốc, gió, pause, qua cầu | `scenarios/` + `docs/evidence/phase2/*.jsonl` | **đạt** |
+| Tất định cả 3 Đêm, 21 600 tick | `determinism.txt` (so `cmp` 2 lần) | **đạt** |
+| Một Đêm đầy đủ ≤ 30 s | cùng file: 0.24–0.36 s | **đạt** |
+| Giao diện 3 Đêm, HUD, mũi tên | `p2-night{1,2,3}.png`, `p2-menu.png` (Chrome headless) | **đạt (ảnh)** |
+| **Chưa kiểm chứng** | chơi tay trọn 3 Đêm, nghe âm thanh, đo FPS ≥ 30 trên máy thật, video demo | **chưa đạt** — xem SPEC-PHASE2 §7 |
 
 ## Nhật ký AI
 
-Claude Code (Sonnet 5.5) viết lõi `src/sim.js`, headless, client và test trong một phiên; tôi đọc PRD-0 từ lab board, chốt tuning/giả định, rồi dùng test + `cmp` + ảnh chụp làm bằng chứng. Lỗi AI đã bắt: (1) test dùng scenario `dawn.json` 2 s nên ván kết thúc trước khi rơi khỏi đảo; (2) tính sai tick bị chạm đầu tiên (shade ở 1.2 m phải 4 tick mới ≤ 1 m). Ước tính token: một phiên ngắn, ~60k.
+Claude Code (Sonnet 5.5) viết lõi, headless, client, test; tôi đọc Ticket-02, chốt giả định và duyệt bằng chứng. Lỗi AI bắt được ở Phase 2: (1) tick hồi sinh vẫn cho Mây đi 0.1 m (trái "vận tốc 0, đúng điểm xuất phát"); (2) test dùng bóng ở 20 m rồi tưởng nó đuổi — ngưỡng phát hiện là 12 m; (3) vài assert viết vội luôn đúng, đã thay bằng assert thật; (4) đo "21 600 tick" nhưng Mây chết sau ~2 200 tick, đã đo lại bằng scenario `long.json`. Ước tính token: một phiên dài, ~200k.

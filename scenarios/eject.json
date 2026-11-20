@@ -1,0 +1,1 @@
+{"random_motes": false, "random_shades": false, "random_drifters": false, "motes": [], "shades": [{"id": "S1", "pos": [0, 1, 25.5], "state": "chase"}], "player": {"pos": [0, 0, 24], "carried": 0, "flames": 3}, "lanterns": [{"id": "L1", "lit": true}]}

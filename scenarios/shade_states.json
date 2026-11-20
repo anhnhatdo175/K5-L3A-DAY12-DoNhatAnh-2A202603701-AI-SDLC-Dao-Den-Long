@@ -1,0 +1,1 @@
+{"random_motes": false, "random_shades": false, "random_drifters": false, "motes": [], "shades": [{"id": "S1", "pos": [30, 1, 0]}, {"id": "S2", "pos": [8, 1, 0]}, {"id": "S3", "pos": [8, 1, 5], "state": "stunned", "state_ticks_left": 10}], "player": {"pos": [0, 0, 0]}}
