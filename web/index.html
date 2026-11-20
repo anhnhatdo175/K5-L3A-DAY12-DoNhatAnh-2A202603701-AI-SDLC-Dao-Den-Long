@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đảo Đèn Lồng</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0716; overflow: hidden; font-family: system-ui, sans-serif; color: #ffe9b8; }
+  canvas { display: block; }
+  #hud { position: fixed; inset: 0; pointer-events: none; }
+  .box { position: absolute; padding: 8px 14px; background: rgba(20, 10, 35, .55); border: 1px solid rgba(255, 190, 90, .35); border-radius: 12px; font-size: 18px; }
+  #tl { top: 14px; left: 14px; } #tr { top: 14px; right: 14px; text-align: right; }
+  #bl { bottom: 14px; left: 14px; font-size: 14px; opacity: .85; line-height: 1.5; }
+  #bar { display: inline-block; width: 120px; height: 10px; background: #2a1a3a; border-radius: 5px; vertical-align: middle; overflow: hidden; }
+  #bar i { display: block; height: 100%; background: linear-gradient(90deg, #ffb347, #ffe08a); width: 0; }
+  #msg { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; background: rgba(8, 4, 18, .72); text-align: center; }
+  #msg h1 { font-size: 48px; margin: 0 0 8px; } #msg p { font-size: 20px; margin: 4px; }
+  button { pointer-events: auto; margin-top: 18px; font-size: 20px; padding: 10px 28px; border-radius: 12px; border: 0; background: #ffb347; color: #2b1536; cursor: pointer; }
+  #toast { position: absolute; top: 80px; width: 100%; text-align: center; font-size: 22px; opacity: 0; transition: opacity .4s; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div class="box" id="tl"><span id="flames"></span><br>Đom đóm: <b id="carried">0</b>/<b id="cap">10</b> <span id="bar"><i></i></span></div>
+  <div class="box" id="tr">Điểm: <b id="score">0</b><br>Đèn: <b id="lit">0</b>/5 &nbsp; ⏳ <b id="time">0:00</b></div>
+  <div class="box" id="bl">WASD: đi · Kéo chuột hoặc ←/→: xoay camera · Space: nhảy<br>E: nạp đèn (đứng gần đèn) · F: tỏa sáng (tốn 2 đom đóm) · Enter: chơi lại</div>
+  <div id="toast"></div>
+</div>
+<div id="msg" style="display:flex"><h1 id="mt">Đảo Đèn Lồng</h1><p id="ms">Gom đom đóm, thắp lại 5 Đèn Lồng Lớn, tránh Bóng Mực.</p><button id="btn">Bắt đầu (Enter)</button></div>
+<script type="module" src="/main.js"></script>
+</body>
+</html>
